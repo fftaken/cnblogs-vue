@@ -13,8 +13,9 @@ node app.js
 http服务器、跨域方案[NodeJs](https://nodejs.org/en/)   
 前端模块化方案[webpack](https://github.com/webpack/webpack)   
 Web前端框架[vue.js 2.0](https://github.com/vuejs/vue)   
+前端路由[vue-router](https://github.com/vuejs/vue-router)   
 状态管理[vuex](https://github.com/vuejs/vuex)   
-UI框架[MUI](https://github.com/dcloudio/mui)
+UI框架[MUI](https://github.com/dcloudio/mui)   
 CSS预编译方案[stylus](https://github.com/stylus/stylus)   
 ES6
 
