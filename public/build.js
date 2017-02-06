@@ -58,13 +58,19 @@
 
 	var _store2 = _interopRequireDefault(_store);
 
-	var _app = __webpack_require__(86);
+	var _app = __webpack_require__(88);
 
 	var _app2 = _interopRequireDefault(_app);
 
 	var _index = __webpack_require__(98);
 
 	var _index2 = _interopRequireDefault(_index);
+
+	var _index3 = __webpack_require__(113);
+
+	var _index4 = _interopRequireDefault(_index3);
+
+	var _vuexRouterSync = __webpack_require__(116);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -73,12 +79,16 @@
 	var routes = [{
 	    path: '/index', component: _index2.default
 	}, {
+	    path: '/blog/:id', component: _index4.default
+	}, {
 	    path: '*', redirect: '/index'
 	}];
 
 	var router = new _vueRouter2.default({
 	    routes: routes
 	});
+
+	(0, _vuexRouterSync.sync)(_store2.default, router);
 
 	new _vue2.default({
 	    el: '#app',
@@ -10939,7 +10949,15 @@
 
 	var actions = _interopRequireWildcard(_actions);
 
-	var _news_list = __webpack_require__(8);
+	var _blog = __webpack_require__(8);
+
+	var _blog2 = _interopRequireDefault(_blog);
+
+	var _blog_list = __webpack_require__(81);
+
+	var _blog_list2 = _interopRequireDefault(_blog_list);
+
+	var _news_list = __webpack_require__(87);
 
 	var _news_list2 = _interopRequireDefault(_news_list);
 
@@ -10954,6 +10972,8 @@
 	    mutations: _mutations.mutations,
 	    actions: actions,
 	    modules: {
+	        blog: _blog2.default,
+	        blog_list: _blog_list2.default,
 	        news_list: _news_list2.default
 	    }
 	});
@@ -11761,68 +11781,32 @@
 
 	var _defineProperty3 = _interopRequireDefault(_defineProperty2);
 
-	var _toConsumableArray2 = __webpack_require__(78);
+	var _api = __webpack_require__(78);
 
-	var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);
-
-	var _mutations;
-
-	var _api = __webpack_require__(83);
-
-	var _mutation_types = __webpack_require__(85);
+	var _mutation_types = __webpack_require__(80);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var state = {
-	    page: 1,
-	    rows: 10,
-	    list: [],
-	    hasMore: true
+	    item: ''
 	};
 
-	var mutations = (_mutations = {}, (0, _defineProperty3.default)(_mutations, _mutation_types.APPEND_NEWS_LIST, function (state, data) {
-	    var _state$list;
-
-	    if (data.length < 10) {
-	        state.hasMore = false;
-	    }
-	    state.page++;
-	    (_state$list = state.list).push.apply(_state$list, (0, _toConsumableArray3.default)(data));
-	}), (0, _defineProperty3.default)(_mutations, _mutation_types.UPDATE_NEWS_LIST, function (state, data) {
-	    if (data.length < 10) {
-	        state.hasMore = false;
-	    }
-	    state.page = 1;
-	    state.list = data;
-	}), _mutations);
+	var mutations = (0, _defineProperty3.default)({}, _mutation_types.UPDATE_BLOG, function (state, data) {
+	    state.item = data;
+	});
 
 	var actions = {
-	    getNews: function getNews(_ref) {
+	    getBlog: function getBlog(_ref) {
 	        var commit = _ref.commit,
-	            state = _ref.state;
+	            state = _ref.state,
+	            rootState = _ref.rootState;
 
 	        var queryData = {
-	            page: state.page,
-	            rows: state.rows
+	            id: rootState.route.params.id
 	        };
 	        return new _promise2.default(function (resolve, reject) {
-	            (0, _api.Post)('getRecent', queryData).then(function (response) {
-	                commit(_mutation_types.APPEND_NEWS_LIST, response.body.feed.entry);
-	                resolve();
-	            });
-	        });
-	    },
-	    updateNews: function updateNews(_ref2) {
-	        var commit = _ref2.commit,
-	            state = _ref2.state;
-
-	        var queryData = {
-	            page: 1,
-	            rows: state.rows
-	        };
-	        return new _promise2.default(function (resolve, reject) {
-	            (0, _api.Post)('getRecent', queryData).then(function (response) {
-	                commit(_mutation_types.UPDATE_NEWS_LIST, response.body.feed.entry);
+	            (0, _api.Post)('getBlog', queryData).then(function (response) {
+	                commit(_mutation_types.UPDATE_BLOG, response.body.string);
 	                resolve();
 	            });
 	        });
@@ -13349,102 +13333,6 @@
 /* 78 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
-
-	exports.__esModule = true;
-
-	var _from = __webpack_require__(79);
-
-	var _from2 = _interopRequireDefault(_from);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	exports.default = function (arr) {
-	  if (Array.isArray(arr)) {
-	    for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) {
-	      arr2[i] = arr[i];
-	    }
-
-	    return arr2;
-	  } else {
-	    return (0, _from2.default)(arr);
-	  }
-	};
-
-/***/ },
-/* 79 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = { "default": __webpack_require__(80), __esModule: true };
-
-/***/ },
-/* 80 */
-/***/ function(module, exports, __webpack_require__) {
-
-	__webpack_require__(12);
-	__webpack_require__(81);
-	module.exports = __webpack_require__(20).Array.from;
-
-/***/ },
-/* 81 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	var ctx            = __webpack_require__(21)
-	  , $export        = __webpack_require__(18)
-	  , toObject       = __webpack_require__(55)
-	  , call           = __webpack_require__(64)
-	  , isArrayIter    = __webpack_require__(65)
-	  , toLength       = __webpack_require__(45)
-	  , createProperty = __webpack_require__(82)
-	  , getIterFn      = __webpack_require__(66);
-
-	$export($export.S + $export.F * !__webpack_require__(73)(function(iter){ Array.from(iter); }), 'Array', {
-	  // 22.1.2.1 Array.from(arrayLike, mapfn = undefined, thisArg = undefined)
-	  from: function from(arrayLike/*, mapfn = undefined, thisArg = undefined*/){
-	    var O       = toObject(arrayLike)
-	      , C       = typeof this == 'function' ? this : Array
-	      , aLen    = arguments.length
-	      , mapfn   = aLen > 1 ? arguments[1] : undefined
-	      , mapping = mapfn !== undefined
-	      , index   = 0
-	      , iterFn  = getIterFn(O)
-	      , length, result, step, iterator;
-	    if(mapping)mapfn = ctx(mapfn, aLen > 2 ? arguments[2] : undefined, 2);
-	    // if object isn't iterable or it's array with default iterator - use simple case
-	    if(iterFn != undefined && !(C == Array && isArrayIter(iterFn))){
-	      for(iterator = iterFn.call(O), result = new C; !(step = iterator.next()).done; index++){
-	        createProperty(result, index, mapping ? call(iterator, mapfn, [step.value, index], true) : step.value);
-	      }
-	    } else {
-	      length = toLength(O.length);
-	      for(result = new C(length); length > index; index++){
-	        createProperty(result, index, mapping ? mapfn(O[index], index) : O[index]);
-	      }
-	    }
-	    result.length = index;
-	    return result;
-	  }
-	});
-
-
-/***/ },
-/* 82 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	var $defineProperty = __webpack_require__(24)
-	  , createDesc      = __webpack_require__(32);
-
-	module.exports = function(object, index, value){
-	  if(index in object)$defineProperty.f(object, index, createDesc(0, value));
-	  else object[index] = value;
-	};
-
-/***/ },
-/* 83 */
-/***/ function(module, exports, __webpack_require__) {
-
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
@@ -13457,7 +13345,7 @@
 
 	var _vue2 = _interopRequireDefault(_vue);
 
-	var _vueResource = __webpack_require__(84);
+	var _vueResource = __webpack_require__(79);
 
 	var _vueResource2 = _interopRequireDefault(_vueResource);
 
@@ -13475,7 +13363,7 @@
 	}
 
 /***/ },
-/* 84 */
+/* 79 */
 /***/ function(module, exports) {
 
 	/*!
@@ -14998,7 +14886,7 @@
 	module.exports = plugin;
 
 /***/ },
-/* 85 */
+/* 80 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -15008,19 +14896,304 @@
 	});
 	var APPEND_NEWS_LIST = exports.APPEND_NEWS_LIST = 'APPEND_NEWS_LIST';
 	var UPDATE_NEWS_LIST = exports.UPDATE_NEWS_LIST = 'UPDATE_NEWS_LIST';
+	var APPEND_BLOG_LIST = exports.APPEND_BLOG_LIST = 'APPEND_BLOG_LIST';
+	var UPDATE_BLOG_LIST = exports.UPDATE_BLOG_LIST = 'UPDATE_BLOG_LIST';
+	var UPDATE_BLOG = exports.UPDATE_BLOG = 'UPDATE_BLOG';
+
+/***/ },
+/* 81 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _promise = __webpack_require__(9);
+
+	var _promise2 = _interopRequireDefault(_promise);
+
+	var _defineProperty2 = __webpack_require__(74);
+
+	var _defineProperty3 = _interopRequireDefault(_defineProperty2);
+
+	var _toConsumableArray2 = __webpack_require__(82);
+
+	var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);
+
+	var _mutations;
+
+	var _api = __webpack_require__(78);
+
+	var _mutation_types = __webpack_require__(80);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var state = {
+	    page: 1,
+	    rows: 10,
+	    list: [],
+	    hasMore: true
+	};
+
+	var mutations = (_mutations = {}, (0, _defineProperty3.default)(_mutations, _mutation_types.APPEND_BLOG_LIST, function (state, data) {
+	    var _state$list;
+
+	    if (data.length < 10) {
+	        state.hasMore = false;
+	    }
+	    state.page++;
+	    (_state$list = state.list).push.apply(_state$list, (0, _toConsumableArray3.default)(data));
+	}), (0, _defineProperty3.default)(_mutations, _mutation_types.UPDATE_BLOG_LIST, function (state, data) {
+	    state.hasMore = true;
+	    if (data.length < 10) {
+	        state.hasMore = false;
+	    }
+	    state.page = 1;
+	    state.list = data;
+	}), _mutations);
+
+	var actions = {
+	    getBlogs: function getBlogs(_ref) {
+	        var commit = _ref.commit,
+	            state = _ref.state;
+
+	        var queryData = {
+	            page: state.page,
+	            rows: state.rows
+	        };
+	        return new _promise2.default(function (resolve, reject) {
+	            (0, _api.Post)('getRecent', queryData).then(function (response) {
+	                commit(_mutation_types.APPEND_BLOG_LIST, response.body.feed.entry);
+	                resolve();
+	            });
+	        });
+	    },
+	    updateBlogs: function updateBlogs(_ref2) {
+	        var commit = _ref2.commit,
+	            state = _ref2.state;
+
+	        var queryData = {
+	            page: 1,
+	            rows: state.rows
+	        };
+	        return new _promise2.default(function (resolve, reject) {
+	            (0, _api.Post)('getRecent', queryData).then(function (response) {
+	                commit(_mutation_types.UPDATE_BLOG_LIST, response.body.feed.entry);
+	                resolve();
+	            });
+	        });
+	    }
+	};
+
+	exports.default = {
+	    state: state,
+	    mutations: mutations,
+	    actions: actions
+	};
+
+/***/ },
+/* 82 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	exports.__esModule = true;
+
+	var _from = __webpack_require__(83);
+
+	var _from2 = _interopRequireDefault(_from);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	exports.default = function (arr) {
+	  if (Array.isArray(arr)) {
+	    for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) {
+	      arr2[i] = arr[i];
+	    }
+
+	    return arr2;
+	  } else {
+	    return (0, _from2.default)(arr);
+	  }
+	};
+
+/***/ },
+/* 83 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = { "default": __webpack_require__(84), __esModule: true };
+
+/***/ },
+/* 84 */
+/***/ function(module, exports, __webpack_require__) {
+
+	__webpack_require__(12);
+	__webpack_require__(85);
+	module.exports = __webpack_require__(20).Array.from;
+
+/***/ },
+/* 85 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	var ctx            = __webpack_require__(21)
+	  , $export        = __webpack_require__(18)
+	  , toObject       = __webpack_require__(55)
+	  , call           = __webpack_require__(64)
+	  , isArrayIter    = __webpack_require__(65)
+	  , toLength       = __webpack_require__(45)
+	  , createProperty = __webpack_require__(86)
+	  , getIterFn      = __webpack_require__(66);
+
+	$export($export.S + $export.F * !__webpack_require__(73)(function(iter){ Array.from(iter); }), 'Array', {
+	  // 22.1.2.1 Array.from(arrayLike, mapfn = undefined, thisArg = undefined)
+	  from: function from(arrayLike/*, mapfn = undefined, thisArg = undefined*/){
+	    var O       = toObject(arrayLike)
+	      , C       = typeof this == 'function' ? this : Array
+	      , aLen    = arguments.length
+	      , mapfn   = aLen > 1 ? arguments[1] : undefined
+	      , mapping = mapfn !== undefined
+	      , index   = 0
+	      , iterFn  = getIterFn(O)
+	      , length, result, step, iterator;
+	    if(mapping)mapfn = ctx(mapfn, aLen > 2 ? arguments[2] : undefined, 2);
+	    // if object isn't iterable or it's array with default iterator - use simple case
+	    if(iterFn != undefined && !(C == Array && isArrayIter(iterFn))){
+	      for(iterator = iterFn.call(O), result = new C; !(step = iterator.next()).done; index++){
+	        createProperty(result, index, mapping ? call(iterator, mapfn, [step.value, index], true) : step.value);
+	      }
+	    } else {
+	      length = toLength(O.length);
+	      for(result = new C(length); length > index; index++){
+	        createProperty(result, index, mapping ? mapfn(O[index], index) : O[index]);
+	      }
+	    }
+	    result.length = index;
+	    return result;
+	  }
+	});
+
 
 /***/ },
 /* 86 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	var $defineProperty = __webpack_require__(24)
+	  , createDesc      = __webpack_require__(32);
+
+	module.exports = function(object, index, value){
+	  if(index in object)$defineProperty.f(object, index, createDesc(0, value));
+	  else object[index] = value;
+	};
+
+/***/ },
+/* 87 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _promise = __webpack_require__(9);
+
+	var _promise2 = _interopRequireDefault(_promise);
+
+	var _defineProperty2 = __webpack_require__(74);
+
+	var _defineProperty3 = _interopRequireDefault(_defineProperty2);
+
+	var _toConsumableArray2 = __webpack_require__(82);
+
+	var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);
+
+	var _mutations;
+
+	var _api = __webpack_require__(78);
+
+	var _mutation_types = __webpack_require__(80);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var state = {
+	    page: 1,
+	    rows: 10,
+	    list: [],
+	    hasMore: true
+	};
+
+	var mutations = (_mutations = {}, (0, _defineProperty3.default)(_mutations, _mutation_types.APPEND_NEWS_LIST, function (state, data) {
+	    var _state$list;
+
+	    if (data.length < 10) {
+	        state.hasMore = false;
+	    }
+	    state.page++;
+	    (_state$list = state.list).push.apply(_state$list, (0, _toConsumableArray3.default)(data));
+	}), (0, _defineProperty3.default)(_mutations, _mutation_types.UPDATE_NEWS_LIST, function (state, data) {
+	    state.hasMore = true;
+	    if (data.length < 10) {
+	        state.hasMore = false;
+	    }
+	    state.page = 1;
+	    state.list = data;
+	}), _mutations);
+
+	var actions = {
+	    getNews: function getNews(_ref) {
+	        var commit = _ref.commit,
+	            state = _ref.state;
+
+	        var queryData = {
+	            page: state.page,
+	            rows: state.rows
+	        };
+	        return new _promise2.default(function (resolve, reject) {
+	            (0, _api.Post)('getRecent', queryData).then(function (response) {
+	                commit(_mutation_types.APPEND_NEWS_LIST, response.body.feed.entry);
+	                resolve();
+	            });
+	        });
+	    },
+	    updateNews: function updateNews(_ref2) {
+	        var commit = _ref2.commit,
+	            state = _ref2.state;
+
+	        var queryData = {
+	            page: 1,
+	            rows: state.rows
+	        };
+	        return new _promise2.default(function (resolve, reject) {
+	            (0, _api.Post)('getRecent', queryData).then(function (response) {
+	                commit(_mutation_types.UPDATE_NEWS_LIST, response.body.feed.entry);
+	                resolve();
+	            });
+	        });
+	    }
+	};
+
+	exports.default = {
+	    state: state,
+	    mutations: mutations,
+	    actions: actions
+	};
+
+/***/ },
+/* 88 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __vue_exports__, __vue_options__
 	var __vue_styles__ = {}
 
 	/* styles */
-	__webpack_require__(87)
+	__webpack_require__(89)
 
 	/* script */
-	__vue_exports__ = __webpack_require__(91)
+	__vue_exports__ = __webpack_require__(93)
 
 	/* template */
 	var __vue_template__ = __webpack_require__(97)
@@ -15057,16 +15230,16 @@
 
 
 /***/ },
-/* 87 */
+/* 89 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(88);
+	var content = __webpack_require__(90);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(90)(content, {});
+	var update = __webpack_require__(92)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -15083,10 +15256,10 @@
 	}
 
 /***/ },
-/* 88 */
+/* 90 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(89)();
+	exports = module.exports = __webpack_require__(91)();
 	// imports
 
 
@@ -15097,7 +15270,7 @@
 
 
 /***/ },
-/* 89 */
+/* 91 */
 /***/ function(module, exports) {
 
 	/*
@@ -15153,7 +15326,7 @@
 
 
 /***/ },
-/* 90 */
+/* 92 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -15375,7 +15548,7 @@
 
 
 /***/ },
-/* 91 */
+/* 93 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -15384,7 +15557,7 @@
 	    value: true
 	});
 
-	var _index = __webpack_require__(92);
+	var _index = __webpack_require__(94);
 
 	var _index2 = _interopRequireDefault(_index);
 
@@ -15407,14 +15580,11 @@
 	//
 
 /***/ },
-/* 92 */
+/* 94 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __vue_exports__, __vue_options__
 	var __vue_styles__ = {}
-
-	/* styles */
-	__webpack_require__(93)
 
 	/* script */
 	__vue_exports__ = __webpack_require__(95)
@@ -15451,46 +15621,6 @@
 	if (__vue_options__.functional) {console.error("[vue-loader] index.vue: functional components are not supported and should be defined in plain js files using render functions.")}
 
 	module.exports = __vue_exports__
-
-
-/***/ },
-/* 93 */
-/***/ function(module, exports, __webpack_require__) {
-
-	// style-loader: Adds some css to the DOM by adding a <style> tag
-
-	// load the styles
-	var content = __webpack_require__(94);
-	if(typeof content === 'string') content = [[module.id, content, '']];
-	// add the styles to the DOM
-	var update = __webpack_require__(90)(content, {});
-	if(content.locals) module.exports = content.locals;
-	// Hot Module Replacement
-	if(false) {
-		// When the styles change, update the <style> tags
-		if(!content.locals) {
-			module.hot.accept("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-974b6aec!./../../../node_modules/stylus-loader/index.js!./../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./index.vue", function() {
-				var newContent = require("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-974b6aec!./../../../node_modules/stylus-loader/index.js!./../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./index.vue");
-				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-				update(newContent);
-			});
-		}
-		// When the module is disposed, remove the <style> tags
-		module.hot.dispose(function() { update(); });
-	}
-
-/***/ },
-/* 94 */
-/***/ function(module, exports, __webpack_require__) {
-
-	exports = module.exports = __webpack_require__(89)();
-	// imports
-
-
-	// module
-	exports.push([module.id, "\n.nav-right {\n  position: absolute;\n  left: 80%;\n  top: -25%;\n  height: 150%;\n  width: 50%;\n  border: 1px solid #333;\n  border-radius: 50%;\n}\n", ""]);
-
-	// exports
 
 
 /***/ },
@@ -15568,7 +15698,7 @@
 	__vue_exports__ = __webpack_require__(101)
 
 	/* template */
-	var __vue_template__ = __webpack_require__(114)
+	var __vue_template__ = __webpack_require__(112)
 	__vue_options__ = __vue_exports__ = __vue_exports__ || {}
 	if (
 	  typeof __vue_exports__.default === "object" ||
@@ -15611,7 +15741,7 @@
 	var content = __webpack_require__(100);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(90)(content, {});
+	var update = __webpack_require__(92)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -15631,7 +15761,7 @@
 /* 100 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(89)();
+	exports = module.exports = __webpack_require__(91)();
 	// imports
 
 
@@ -15655,9 +15785,9 @@
 
 	var _extends3 = _interopRequireDefault(_extends2);
 
-	var _news = __webpack_require__(109);
+	var _blog = __webpack_require__(109);
 
-	var _news2 = _interopRequireDefault(_news);
+	var _blog2 = _interopRequireDefault(_blog);
 
 	var _vuex = __webpack_require__(5);
 
@@ -15682,31 +15812,31 @@
 
 	exports.default = {
 	    components: {
-	        news: _news2.default
+	        blog: _blog2.default
 	    },
 	    computed: (0, _extends3.default)({}, (0, _vuex.mapState)({
-	        newsList: function newsList(state) {
-	            return state.news_list.list;
+	        blogList: function blogList(state) {
+	            return state.blog_list.list;
 	        },
-	        newsHasMore: function newsHasMore(state) {
-	            return state.news_list.hasMore;
+	        blogHasMore: function blogHasMore(state) {
+	            return state.blog_list.hasMore;
 	        }
 	    })),
-	    methods: (0, _extends3.default)({}, (0, _vuex.mapActions)(['getNews', 'updateNews'])),
+	    methods: (0, _extends3.default)({}, (0, _vuex.mapActions)(['getBlogs', 'updateBlogs'])),
 	    mounted: function mounted() {
 	        var that = this;
 	        $('.mui-content,.mui-scroll-wrapper').height(window.innerHeight);
 
-	        var newsPullrefresh = mui('#newsPullrefresh');
-	        newsPullrefresh.pullRefresh({
+	        var blogPullrefresh = mui('#blogPullrefresh');
+	        blogPullrefresh.pullRefresh({
 	            up: {
 	                height: 50,
 	                auto: true,
 	                contentrefresh: '正在加载...',
 	                contentnomore: '没有更多数据了',
 	                callback: function callback() {
-	                    that.getNews().then(function (res) {
-	                        newsPullrefresh.pullRefresh().endPullupToRefresh(!that.newsHasMore); //参数为true表示没有更多了
+	                    that.getBlogs().then(function (res) {
+	                        blogPullrefresh.pullRefresh().endPullupToRefresh(!that.blogHasMore); //参数为true表示没有更多了
 	                    });
 	                }
 	            },
@@ -15714,9 +15844,9 @@
 	                height: 50,
 	                auto: false,
 	                callback: function callback() {
-	                    that.updateNews().then(function (res) {
-	                        newsPullrefresh.pullRefresh().endPulldownToRefresh(); //参数为true表示没有更多了
-	                        newsPullrefresh.pullRefresh().refresh(true);
+	                    that.updateBlogs().then(function (res) {
+	                        blogPullrefresh.pullRefresh().endPulldownToRefresh(); //参数为true表示没有更多了
+	                        blogPullrefresh.pullRefresh().refresh(true);
 	                    });
 	                }
 	            }
@@ -15831,14 +15961,11 @@
 	var __vue_exports__, __vue_options__
 	var __vue_styles__ = {}
 
-	/* styles */
-	__webpack_require__(110)
-
 	/* script */
-	__vue_exports__ = __webpack_require__(112)
+	__vue_exports__ = __webpack_require__(110)
 
 	/* template */
-	var __vue_template__ = __webpack_require__(113)
+	var __vue_template__ = __webpack_require__(111)
 	__vue_options__ = __vue_exports__ = __vue_exports__ || {}
 	if (
 	  typeof __vue_exports__.default === "object" ||
@@ -15850,7 +15977,7 @@
 	if (typeof __vue_options__ === "function") {
 	  __vue_options__ = __vue_options__.options
 	}
-	__vue_options__.__file = "/home/zhg/Documents/source_code/cnblog-vue/views/components/index/news.vue"
+	__vue_options__.__file = "/home/zhg/Documents/source_code/cnblog-vue/views/components/index/blog.vue"
 	__vue_options__.render = __vue_template__.render
 	__vue_options__.staticRenderFns = __vue_template__.staticRenderFns
 
@@ -15861,58 +15988,18 @@
 	  if (!hotAPI.compatible) return
 	  module.hot.accept()
 	  if (!module.hot.data) {
-	    hotAPI.createRecord("data-v-2518888e", __vue_options__)
+	    hotAPI.createRecord("data-v-72e16108", __vue_options__)
 	  } else {
-	    hotAPI.reload("data-v-2518888e", __vue_options__)
+	    hotAPI.reload("data-v-72e16108", __vue_options__)
 	  }
 	})()}
-	if (__vue_options__.functional) {console.error("[vue-loader] news.vue: functional components are not supported and should be defined in plain js files using render functions.")}
+	if (__vue_options__.functional) {console.error("[vue-loader] blog.vue: functional components are not supported and should be defined in plain js files using render functions.")}
 
 	module.exports = __vue_exports__
 
 
 /***/ },
 /* 110 */
-/***/ function(module, exports, __webpack_require__) {
-
-	// style-loader: Adds some css to the DOM by adding a <style> tag
-
-	// load the styles
-	var content = __webpack_require__(111);
-	if(typeof content === 'string') content = [[module.id, content, '']];
-	// add the styles to the DOM
-	var update = __webpack_require__(90)(content, {});
-	if(content.locals) module.exports = content.locals;
-	// Hot Module Replacement
-	if(false) {
-		// When the styles change, update the <style> tags
-		if(!content.locals) {
-			module.hot.accept("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-2518888e!./../../../node_modules/stylus-loader/index.js!./../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./news.vue", function() {
-				var newContent = require("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-2518888e!./../../../node_modules/stylus-loader/index.js!./../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./news.vue");
-				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-				update(newContent);
-			});
-		}
-		// When the module is disposed, remove the <style> tags
-		module.hot.dispose(function() { update(); });
-	}
-
-/***/ },
-/* 111 */
-/***/ function(module, exports, __webpack_require__) {
-
-	exports = module.exports = __webpack_require__(89)();
-	// imports
-
-
-	// module
-	exports.push([module.id, "\n.news {\n  display: block;\n  height: 100px;\n  width: 100%;\n  border: 1px solid #333;\n  margin-bottom: 10px;\n}\n", ""]);
-
-	// exports
-
-
-/***/ },
-/* 112 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -15944,14 +16031,25 @@
 	//
 
 	exports.default = {
-	    props: ['news'],
-	    mounted: function mounted() {
-	        console.log(this.news);
-	    }
+	    props: ['blog'],
+	    computed: {
+	        hasHeader: function hasHeader() {
+	            return this.blog.author[0].avatar[0] === '' ? false : true;
+	        },
+	        userHeader: function userHeader() {
+	            return '/image?imgUrl=' + this.blog.author[0].avatar[0];
+	        }
+	    },
+	    methods: {
+	        showBlog: function showBlog() {
+	            this.$router.push('/blog/' + this.blog.id[0]);
+	        }
+	    },
+	    mounted: function mounted() {}
 	};
 
 /***/ },
-/* 113 */
+/* 111 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -15959,32 +16057,35 @@
 	    staticClass: "mui-card"
 	  }, [_c('div', {
 	    staticClass: "mui-card-header mui-card-media"
-	  }, [_c('img', {
+	  }, [(_vm.hasHeader) ? _c('img', {
 	    attrs: {
-	      "src": _vm.news.author[0].avatar[0]
+	      "src": _vm.userHeader
 	    }
-	  }), _vm._v(" "), _c('div', {
+	  }) : _vm._e(), _vm._v(" "), _c('div', {
 	    staticClass: "mui-media-body"
-	  }, [_vm._v("\n                " + _vm._s(_vm.news.title[0]._) + "\n                "), _c('p', [_vm._v(_vm._s(_vm.news.author[0].name[0]))])])]), _vm._v(" "), _c('div', {
+	  }, [_vm._v("\n                " + _vm._s(_vm.blog.title[0]._) + "\n                "), _c('p', [_vm._v(_vm._s(_vm.blog.author[0].name[0]))])])]), _vm._v(" "), _c('div', {
 	    staticClass: "mui-card-content"
 	  }, [_c('div', {
 	    staticClass: "mui-card-content-inner"
-	  }, [_vm._v("\n                " + _vm._s(_vm.news.summary[0]._) + "\n            ")])]), _vm._v(" "), _c('div', {
+	  }, [_vm._v("\n                " + _vm._s(_vm.blog.summary[0]._) + "\n            ")])]), _vm._v(" "), _c('div', {
 	    staticClass: "mui-card-footer"
-	  }, [_vm._v("\n            发表于 " + _vm._s(_vm.news.published[0]) + "\n            "), _c('a', {
-	    staticClass: "mui-card-link"
+	  }, [_vm._v("\n            发表于 " + _vm._s(_vm.blog.published[0]) + "\n            "), _c('a', {
+	    staticClass: "mui-card-link",
+	    on: {
+	      "tap": _vm.showBlog
+	    }
 	  }, [_vm._v("查看全文")])])])])
 	},staticRenderFns: []}
 	module.exports.render._withStripped = true
 	if (false) {
 	  module.hot.accept()
 	  if (module.hot.data) {
-	     require("vue-hot-reload-api").rerender("data-v-2518888e", module.exports)
+	     require("vue-hot-reload-api").rerender("data-v-72e16108", module.exports)
 	  }
 	}
 
 /***/ },
-/* 114 */
+/* 112 */
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -15997,14 +16098,14 @@
 	  }, [_c('div', {
 	    staticClass: "mui-scroll-wrapper",
 	    attrs: {
-	      "id": "newsPullrefresh"
+	      "id": "blogPullrefresh"
 	    }
 	  }, [_c('div', {
 	    staticClass: "mui-scroll"
-	  }, [_c('div', _vm._l((_vm.newsList), function(news) {
-	    return _c('news', {
+	  }, [_c('div', _vm._l((_vm.blogList), function(blog) {
+	    return _c('blog', {
 	      attrs: {
-	        "news": news
+	        "blog": blog
 	      }
 	    })
 	  }))])])])])])
@@ -16016,6 +16117,184 @@
 	     require("vue-hot-reload-api").rerender("data-v-fce00748", module.exports)
 	  }
 	}
+
+/***/ },
+/* 113 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __vue_exports__, __vue_options__
+	var __vue_styles__ = {}
+
+	/* script */
+	__vue_exports__ = __webpack_require__(114)
+
+	/* template */
+	var __vue_template__ = __webpack_require__(115)
+	__vue_options__ = __vue_exports__ = __vue_exports__ || {}
+	if (
+	  typeof __vue_exports__.default === "object" ||
+	  typeof __vue_exports__.default === "function"
+	) {
+	if (Object.keys(__vue_exports__).some(function (key) { return key !== "default" && key !== "__esModule" })) {console.error("named exports are not supported in *.vue files.")}
+	__vue_options__ = __vue_exports__ = __vue_exports__.default
+	}
+	if (typeof __vue_options__ === "function") {
+	  __vue_options__ = __vue_options__.options
+	}
+	__vue_options__.__file = "/home/zhg/Documents/source_code/cnblog-vue/views/components/blog/index.vue"
+	__vue_options__.render = __vue_template__.render
+	__vue_options__.staticRenderFns = __vue_template__.staticRenderFns
+
+	/* hot reload */
+	if (false) {(function () {
+	  var hotAPI = require("vue-hot-reload-api")
+	  hotAPI.install(require("vue"), false)
+	  if (!hotAPI.compatible) return
+	  module.hot.accept()
+	  if (!module.hot.data) {
+	    hotAPI.createRecord("data-v-05fce124", __vue_options__)
+	  } else {
+	    hotAPI.reload("data-v-05fce124", __vue_options__)
+	  }
+	})()}
+	if (__vue_options__.functional) {console.error("[vue-loader] index.vue: functional components are not supported and should be defined in plain js files using render functions.")}
+
+	module.exports = __vue_exports__
+
+
+/***/ },
+/* 114 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _extends2 = __webpack_require__(102);
+
+	var _extends3 = _interopRequireDefault(_extends2);
+
+	var _vuex = __webpack_require__(5);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	exports.default = {
+	    computed: (0, _extends3.default)({}, (0, _vuex.mapState)({
+	        blogContent: function blogContent(state) {
+	            return state.blog.item;
+	        }
+	    })),
+	    methods: (0, _extends3.default)({}, (0, _vuex.mapActions)(['getBlog'])),
+	    created: function created() {
+	        this.getBlog();
+	    },
+
+	    mouted: function mouted() {
+	        var that = this;
+
+	        $('#blogContent').height(window.innerHeight);
+	        mui('#blogContent').scroll();
+	    }
+	}; //
+	//
+	//
+	//
+	//
+	//
+	//
+	//
+	//
+	//
+	//
+
+/***/ },
+/* 115 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+	  return _c('div', [_c('div', {
+	    staticClass: "mui-scroll-wrapper",
+	    attrs: {
+	      "id": "blogContent"
+	    }
+	  }, [_c('div', {
+	    staticClass: "mui-scroll"
+	  }, [_c('div', {
+	    domProps: {
+	      "innerHTML": _vm._s(_vm.blogContent)
+	    }
+	  })])])])
+	},staticRenderFns: []}
+	module.exports.render._withStripped = true
+	if (false) {
+	  module.hot.accept()
+	  if (module.hot.data) {
+	     require("vue-hot-reload-api").rerender("data-v-05fce124", module.exports)
+	  }
+	}
+
+/***/ },
+/* 116 */
+/***/ function(module, exports) {
+
+	exports.sync = function (store, router, options) {
+	  var moduleName = (options || {}).moduleName || 'route'
+
+	  store.registerModule(moduleName, {
+	    state: cloneRoute(router.currentRoute),
+	    mutations: {
+	      'router/ROUTE_CHANGED': function (state, transition) {
+	        store.state[moduleName] = cloneRoute(transition.to, transition.from)
+	      }
+	    }
+	  })
+
+	  var isTimeTraveling = false
+	  var currentPath
+
+	  // sync router on store change
+	  store.watch(
+	    function (state) { return state[moduleName] },
+	    function (route) {
+	      if (route.fullPath === currentPath) {
+	        return
+	      }
+	      isTimeTraveling = true
+	      currentPath = route.fullPath
+	      router.push(route)
+	    },
+	    { sync: true }
+	  )
+
+	  // sync store on router navigation
+	  router.afterEach(function (to, from) {
+	    if (isTimeTraveling) {
+	      isTimeTraveling = false
+	      return
+	    }
+	    currentPath = to.fullPath
+	    store.commit('router/ROUTE_CHANGED', { to: to, from: from })
+	  })
+	}
+
+	function cloneRoute (to, from) {
+	  var clone = {
+	    name: to.name,
+	    path: to.path,
+	    hash: to.hash,
+	    query: to.query,
+	    params: to.params,
+	    fullPath: to.fullPath,
+	    meta: to.meta
+	  }
+	  if (from) {
+	    clone.from = cloneRoute(from)
+	  }
+	  return Object.freeze(clone)
+	}
+
 
 /***/ }
 /******/ ]);

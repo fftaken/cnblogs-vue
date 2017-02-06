@@ -14,3 +14,17 @@ exports.getRecent=(req,res,next)=>{
         }
     })
 }
+
+exports.getBlog=(req,res,next)=>{
+    let id=req.body.id;
+
+    request.get('http://wcf.open.cnblogs.com/blog/post/body/'+id,(error,response,body)=>{
+        if (error) {
+            res.send(error);
+        }
+        else {
+            responseFun.ParseXml(res,body);
+        }
+    })
+}
+
