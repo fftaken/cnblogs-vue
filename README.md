@@ -15,8 +15,7 @@ http服务器、跨域方案[NodeJs](https://nodejs.org/en/)
 Web前端框架[vue.js 2.0](https://github.com/vuejs/vue)   
 状态管理[vuex](https://github.com/vuejs/vuex)   
 UI框架[MUI](https://github.com/dcloudio/mui)
+ES6
 
-
-vuex 
 ## License
 MIT
