@@ -4,8 +4,8 @@
             <div class="mui-card-header mui-card-media">
                 <img :src="news.author[0].avatar[0]">
                 <div class="mui-media-body">
-                    {{news.author[0].name[0]}}
-                    <p>发表于 {{news.published[0]}}</p>
+                    {{news.title[0]._}}
+                    <p>{{news.author[0].name[0]}}</p>
                 </div>
             </div>
             <div class="mui-card-content">
@@ -14,7 +14,7 @@
                 </div>
             </div>
             <div class="mui-card-footer">
-                <a class="mui-card-link">点赞</a>
+                发表于 {{news.published[0]}}
                 <a class="mui-card-link">查看全文</a>
             </div>
         </div>

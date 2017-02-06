@@ -15965,20 +15965,16 @@
 	    }
 	  }), _vm._v(" "), _c('div', {
 	    staticClass: "mui-media-body"
-	  }, [_vm._v("\n                " + _vm._s(_vm.news.author[0].name[0]) + "\n                "), _c('p', [_vm._v("发表于 " + _vm._s(_vm.news.published[0]))])])]), _vm._v(" "), _c('div', {
+	  }, [_vm._v("\n                " + _vm._s(_vm.news.title[0]._) + "\n                "), _c('p', [_vm._v(_vm._s(_vm.news.author[0].name[0]))])])]), _vm._v(" "), _c('div', {
 	    staticClass: "mui-card-content"
 	  }, [_c('div', {
 	    staticClass: "mui-card-content-inner"
-	  }, [_vm._v("\n                " + _vm._s(_vm.news.summary[0]._) + "\n            ")])]), _vm._v(" "), _vm._m(0)])])
-	},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-	  return _c('div', {
+	  }, [_vm._v("\n                " + _vm._s(_vm.news.summary[0]._) + "\n            ")])]), _vm._v(" "), _c('div', {
 	    staticClass: "mui-card-footer"
-	  }, [_c('a', {
+	  }, [_vm._v("\n            发表于 " + _vm._s(_vm.news.published[0]) + "\n            "), _c('a', {
 	    staticClass: "mui-card-link"
-	  }, [_vm._v("点赞")]), _vm._v(" "), _c('a', {
-	    staticClass: "mui-card-link"
-	  }, [_vm._v("查看全文")])])
-	}]}
+	  }, [_vm._v("查看全文")])])])])
+	},staticRenderFns: []}
 	module.exports.render._withStripped = true
 	if (false) {
 	  module.hot.accept()
