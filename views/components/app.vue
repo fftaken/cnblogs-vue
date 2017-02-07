@@ -1,17 +1,14 @@
 <template>
     <div id="app">
-        <router-view>
+        <keep-alive>
+            <router-view>
 
-        </router-view>
-        <!--<nav_right></nav_right>-->
+            </router-view>
+        </keep-alive>
     </div>
 </template>
 <script>
-import nav_right from './nav_right/index.vue'
     export default{
-        components:{
-            nav_right
-        },
         data(){
             return {
             }

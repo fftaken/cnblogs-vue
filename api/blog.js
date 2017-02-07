@@ -5,7 +5,10 @@ exports.getRecent=(req,res,next)=>{
     let page=req.body.page;
     let rows=req.body.rows;
 
-    request.get('http://wcf.open.cnblogs.com/blog/sitehome/paged/'+page+'/'+rows,(error,response,body)=>{
+    request.get({
+        uri:'http://wcf.open.cnblogs.com/blog/sitehome/paged/'+page+'/'+rows,
+        referer:'http://www.cnblogs.com/'
+    },(error,response,body)=>{
         if (error) {
             res.send(error);
         }
