@@ -12,6 +12,11 @@
                 </div>
             </div>
         </div>
+        <a href="javascript:history.go(-1)" class="btn-return">
+            <div class="mui-icon mui-icon-undo">
+
+            </div>
+        </a>
     </div>
 </template>
 <script>
@@ -29,7 +34,10 @@ import {mapState,mapActions} from 'vuex'
             }
         },
         methods:{
-            ...mapActions(['getBlog'])
+            ...mapActions(['getBlog']),
+            return(){
+                this.$router.go(-1)
+            }
         },
         created(){
         },
@@ -44,6 +52,9 @@ import {mapState,mapActions} from 'vuex'
                     $('.code_img_closed').remove()
                 })
             })
+        },
+        deactivated(){
+            this.$destroy()
         }
     }
 </script>
@@ -60,4 +71,17 @@ import {mapState,mapActions} from 'vuex'
         width 100%
     h4
         line-height 20px
+.btn-return
+    display block
+    z-index 2
+    color #999
+    position fixed
+    bottom 50px
+    right 25px
+    width 50px
+    height 50px
+    border-radius 25px
+    text-align center
+    line-height 50px
+    background-color rgba(255,255,255,0.8)
 </style>

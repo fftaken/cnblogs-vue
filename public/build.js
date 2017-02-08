@@ -16125,7 +16125,7 @@
 
 
 	// module
-	exports.push([module.id, "\n#blogContent {\n  background-color: #fff;\n}\n#blogContent .mui-scroll {\n  padding: 10px 10px 0px 10px;\n}\n#blogContent pre {\n  white-space: pre-wrap;\n  word-space: pre-wrap;\n  background-color: #f5f5f5;\n}\n#blogContent img {\n  width: 100%;\n}\n#blogContent h4 {\n  line-height: 20px;\n}\n", ""]);
+	exports.push([module.id, "\n#blogContent {\n  background-color: #fff;\n}\n#blogContent .mui-scroll {\n  padding: 10px 10px 0px 10px;\n}\n#blogContent pre {\n  white-space: pre-wrap;\n  word-space: pre-wrap;\n  background-color: #f5f5f5;\n}\n#blogContent img {\n  width: 100%;\n}\n#blogContent h4 {\n  line-height: 20px;\n}\n.btn-return {\n  display: block;\n  z-index: 2;\n  color: #999;\n  position: fixed;\n  bottom: 50px;\n  right: 25px;\n  width: 50px;\n  height: 50px;\n  border-radius: 25px;\n  text-align: center;\n  line-height: 50px;\n  background-color: rgba(255,255,255,0.8);\n}\n", ""]);
 
 	// exports
 
@@ -16161,7 +16161,11 @@
 	            return timeStr;
 	        }
 	    }),
-	    methods: (0, _extends3.default)({}, (0, _vuex.mapActions)(['getBlog'])),
+	    methods: (0, _extends3.default)({}, (0, _vuex.mapActions)(['getBlog']), {
+	        return: function _return() {
+	            this.$router.go(-1);
+	        }
+	    }),
 	    created: function created() {},
 
 	    mounted: function mounted() {
@@ -16174,8 +16178,16 @@
 	                $('.code_img_closed').remove();
 	            });
 	        });
+	    },
+	    deactivated: function deactivated() {
+	        this.$destroy();
 	    }
 	}; //
+	//
+	//
+	//
+	//
+	//
 	//
 	//
 	//
@@ -16211,7 +16223,7 @@
 	    }
 	  }, [_vm._v("\n                " + _vm._s(_vm.blog.author[0].name[0]) + " " + _vm._s(_vm.publishTime) + "\n            ")]), _vm._v(" "), _c('div', {
 	    staticStyle: {
-	      "border-top": "1px solid #666",
+	      "border-top": "1px solid #e5e5e5",
 	      "width": "100%",
 	      "margin": "10px 0px"
 	    }
@@ -16219,8 +16231,17 @@
 	    domProps: {
 	      "innerHTML": _vm._s(_vm.blog.blogContent)
 	    }
-	  })])])])
-	},staticRenderFns: []}
+	  })])]), _vm._v(" "), _vm._m(0)])
+	},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+	  return _c('a', {
+	    staticClass: "btn-return",
+	    attrs: {
+	      "href": "javascript:history.go(-1)"
+	    }
+	  }, [_c('div', {
+	    staticClass: "mui-icon mui-icon-undo"
+	  })])
+	}]}
 	module.exports.render._withStripped = true
 	if (false) {
 	  module.hot.accept()
