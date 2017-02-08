@@ -3,12 +3,34 @@
         <div id="blogContent" class="mui-scroll-wrapper">
             <div class="mui-scroll">
                 <h4>{{blog.title[0]._}}</h4>
-                <span style="color: #999;font-size:15px;">
-                    {{blog.author[0].name[0]}} {{publishTime}}
+                <span style="color: #666;font-size:15px;">
+                    {{blog.author[0].name[0]}}  {{publishTime}}
                 </span>
                 <div style="border-top:1px solid #e5e5e5;width:100%;margin:10px 0px;"></div>
+                <div v-show="loading" style="text-align:center;font-size: 15px;line-height: 24px;font-weight:700;color: #777;">
+                    <div class="mui-pull-loading mui-icon mui-spinner mui-visibility"></div>
+                    正在加载...
+                </div>
                 <div v-html="blog.blogContent">
 
+                </div>
+                <div v-show="!loading">
+                    <div class="title" style="font-size: 21px;margin-bottom: 10px;">
+                        评论
+                    </div>
+                    <ul class="mui-table-view">
+                        <div style="text-align: center;height: 30px;line-height: 30px;" v-if="!hasComment">
+                            目前还没有评论...
+                        </div>
+                        <li class="mui-table-view-cell mui-media" v-for="comment in blog.commentList">
+                            <div class="mui-table">
+                                <div class="mui-table-cell mui-col-xs-10">
+                                    <span class="mui-ellipsis">{{comment.author[0].name[0]}}</span>
+                                    <p class="mui-h6" v-html="comment.content[0]._"></p>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
@@ -22,6 +44,11 @@
 <script>
 import {mapState,mapActions} from 'vuex'
     export default {
+        data(){
+            return {
+                loading:true
+            }
+        },
         computed:{
             ...mapState({
                 blog:state=>state.blog.item
@@ -31,10 +58,13 @@ import {mapState,mapActions} from 'vuex'
                 timeStr=timeStr.split('+')[0]
                 console.log(new Date(timeStr))
                 return timeStr;
+            },
+            hasComment(){
+                return this.blog.commentList&&this.blog.commentList.length!=0
             }
         },
         methods:{
-            ...mapActions(['getBlog']),
+            ...mapActions(['getBlog','getBlogComment']),
             return(){
                 this.$router.go(-1)
             }
@@ -43,14 +73,16 @@ import {mapState,mapActions} from 'vuex'
         },
         mounted:function(){
             let that=this
+
             $('#blogContent').height(window.innerHeight)
             mui('#blogContent').scroll()
-
 
             that.getBlog().then(res=>{
                 that.$nextTick(function(){
                     $('.code_img_closed').remove()
+                    that.loading=false
                 })
+                that.getBlogComment()
             })
         },
         deactivated(){
@@ -71,17 +103,21 @@ import {mapState,mapActions} from 'vuex'
         width 100%
     h4
         line-height 20px
+    .mui-table-view
+        &:after
+            height 0px
 .btn-return
     display block
     z-index 2
     color #999
     position fixed
-    bottom 50px
-    right 25px
+    bottom 70px
+    right 10px
     width 50px
     height 50px
     border-radius 25px
     text-align center
     line-height 50px
+    border 1px solid #e5e5e5
     background-color rgba(255,255,255,0.8)
 </style>

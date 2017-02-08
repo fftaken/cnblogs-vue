@@ -11820,6 +11820,23 @@
 	                resolve();
 	            });
 	        });
+	    },
+	    getBlogComment: function getBlogComment(_ref2) {
+	        var commit = _ref2.commit,
+	            state = _ref2.state,
+	            rootState = _ref2.rootState;
+
+	        var queryData = {
+	            blogId: rootState.route.params.id
+	        };
+	        return new _promise2.default(function (resolve, reject) {
+	            (0, _api.Post)('getBlogComment', queryData).then(function (response) {
+	                commit(_mutation_types.ASSIGN_BLOG, {
+	                    commentList: response.body.feed.entry
+	                });
+	                resolve();
+	            });
+	        });
 	    }
 	};
 
@@ -15940,7 +15957,6 @@
 	        publishTime: function publishTime() {
 	            var timeStr = this.blog.published[0];
 	            timeStr = timeStr.split('+')[0];
-	            console.log(new Date(timeStr));
 	            return timeStr;
 	        }
 	    },
@@ -15952,6 +15968,19 @@
 	    },
 	    mounted: function mounted() {}
 	}; //
+	//
+	//
+	//
+	//
+	//
+	//
+	//
+	//
+	//
+	//
+	//
+	//
+	//
 	//
 	//
 	//
@@ -15994,7 +16023,26 @@
 	    staticClass: "mui-card-content-inner"
 	  }, [_vm._v("\n                " + _vm._s(_vm.blog.summary[0]._) + "\n            ")])]), _vm._v(" "), _c('div', {
 	    staticClass: "mui-card-footer"
-	  }, [_c('a', {
+	  }, [_c('span', [_c('span', {
+	    staticClass: "mui-icon mui-icon-eye",
+	    staticStyle: {
+	      "color": "#999"
+	    }
+	  }), _vm._v(" "), _c('span', [_vm._v(_vm._s(_vm.blog.views[0]))]), _vm._v(" "), _c('span', {
+	    staticClass: "mui-icon-extra mui-icon-extra-heart-filled",
+	    staticStyle: {
+	      "font-size": "19px",
+	      "color": "#999",
+	      "margin-left": "10px"
+	    }
+	  }), _vm._v(" "), _c('span', [_vm._v(_vm._s(_vm.blog.diggs[0]))]), _vm._v(" "), _c('span', {
+	    staticClass: "mui-icon mui-icon-chat",
+	    staticStyle: {
+	      "font-size": "18px",
+	      "color": "#999",
+	      "margin-left": "10px"
+	    }
+	  }), _vm._v(" "), _c('span', [_vm._v(_vm._s(_vm.blog.comments[0]))])]), _vm._v(" "), _c('a', {
 	    staticClass: "mui-card-link",
 	    on: {
 	      "tap": _vm.showBlog
@@ -16125,7 +16173,7 @@
 
 
 	// module
-	exports.push([module.id, "\n#blogContent {\n  background-color: #fff;\n}\n#blogContent .mui-scroll {\n  padding: 10px 10px 0px 10px;\n}\n#blogContent pre {\n  white-space: pre-wrap;\n  word-space: pre-wrap;\n  background-color: #f5f5f5;\n}\n#blogContent img {\n  width: 100%;\n}\n#blogContent h4 {\n  line-height: 20px;\n}\n.btn-return {\n  display: block;\n  z-index: 2;\n  color: #999;\n  position: fixed;\n  bottom: 50px;\n  right: 25px;\n  width: 50px;\n  height: 50px;\n  border-radius: 25px;\n  text-align: center;\n  line-height: 50px;\n  background-color: rgba(255,255,255,0.8);\n}\n", ""]);
+	exports.push([module.id, "\n#blogContent {\n  background-color: #fff;\n}\n#blogContent .mui-scroll {\n  padding: 10px 10px 0px 10px;\n}\n#blogContent pre {\n  white-space: pre-wrap;\n  word-space: pre-wrap;\n  background-color: #f5f5f5;\n}\n#blogContent img {\n  width: 100%;\n}\n#blogContent h4 {\n  line-height: 20px;\n}\n#blogContent .mui-table-view:after {\n  height: 0px;\n}\n.btn-return {\n  display: block;\n  z-index: 2;\n  color: #999;\n  position: fixed;\n  bottom: 70px;\n  right: 10px;\n  width: 50px;\n  height: 50px;\n  border-radius: 25px;\n  text-align: center;\n  line-height: 50px;\n  border: 1px solid #e5e5e5;\n  background-color: rgba(255,255,255,0.8);\n}\n", ""]);
 
 	// exports
 
@@ -16149,6 +16197,12 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	exports.default = {
+	    data: function data() {
+	        return {
+	            loading: true
+	        };
+	    },
+
 	    computed: (0, _extends3.default)({}, (0, _vuex.mapState)({
 	        blog: function blog(state) {
 	            return state.blog.item;
@@ -16159,9 +16213,12 @@
 	            timeStr = timeStr.split('+')[0];
 	            console.log(new Date(timeStr));
 	            return timeStr;
+	        },
+	        hasComment: function hasComment() {
+	            return this.blog.commentList && this.blog.commentList.length != 0;
 	        }
 	    }),
-	    methods: (0, _extends3.default)({}, (0, _vuex.mapActions)(['getBlog']), {
+	    methods: (0, _extends3.default)({}, (0, _vuex.mapActions)(['getBlog', 'getBlogComment']), {
 	        return: function _return() {
 	            this.$router.go(-1);
 	        }
@@ -16170,19 +16227,44 @@
 
 	    mounted: function mounted() {
 	        var that = this;
+
 	        $('#blogContent').height(window.innerHeight);
 	        mui('#blogContent').scroll();
 
 	        that.getBlog().then(function (res) {
 	            that.$nextTick(function () {
 	                $('.code_img_closed').remove();
+	                that.loading = false;
 	            });
+	            that.getBlogComment();
 	        });
 	    },
 	    deactivated: function deactivated() {
 	        this.$destroy();
 	    }
 	}; //
+	//
+	//
+	//
+	//
+	//
+	//
+	//
+	//
+	//
+	//
+	//
+	//
+	//
+	//
+	//
+	//
+	//
+	//
+	//
+	//
+	//
+	//
 	//
 	//
 	//
@@ -16218,20 +16300,72 @@
 	    staticClass: "mui-scroll"
 	  }, [_c('h4', [_vm._v(_vm._s(_vm.blog.title[0]._))]), _vm._v(" "), _c('span', {
 	    staticStyle: {
-	      "color": "#999",
+	      "color": "#666",
 	      "font-size": "15px"
 	    }
-	  }, [_vm._v("\n                " + _vm._s(_vm.blog.author[0].name[0]) + " " + _vm._s(_vm.publishTime) + "\n            ")]), _vm._v(" "), _c('div', {
+	  }, [_vm._v("\n                " + _vm._s(_vm.blog.author[0].name[0]) + "  " + _vm._s(_vm.publishTime) + "\n            ")]), _vm._v(" "), _c('div', {
 	    staticStyle: {
 	      "border-top": "1px solid #e5e5e5",
 	      "width": "100%",
 	      "margin": "10px 0px"
 	    }
 	  }), _vm._v(" "), _c('div', {
+	    directives: [{
+	      name: "show",
+	      rawName: "v-show",
+	      value: (_vm.loading),
+	      expression: "loading"
+	    }],
+	    staticStyle: {
+	      "text-align": "center",
+	      "font-size": "15px",
+	      "line-height": "24px",
+	      "font-weight": "700",
+	      "color": "#777"
+	    }
+	  }, [_c('div', {
+	    staticClass: "mui-pull-loading mui-icon mui-spinner mui-visibility"
+	  }), _vm._v("\n                正在加载...\n            ")]), _vm._v(" "), _c('div', {
 	    domProps: {
 	      "innerHTML": _vm._s(_vm.blog.blogContent)
 	    }
-	  })])]), _vm._v(" "), _vm._m(0)])
+	  }), _vm._v(" "), _c('div', {
+	    directives: [{
+	      name: "show",
+	      rawName: "v-show",
+	      value: (!_vm.loading),
+	      expression: "!loading"
+	    }]
+	  }, [_c('div', {
+	    staticClass: "title",
+	    staticStyle: {
+	      "font-size": "21px",
+	      "margin-bottom": "10px"
+	    }
+	  }, [_vm._v("\n                    评论\n                ")]), _vm._v(" "), _c('ul', {
+	    staticClass: "mui-table-view"
+	  }, [(!_vm.hasComment) ? _c('div', {
+	    staticStyle: {
+	      "text-align": "center",
+	      "height": "30px",
+	      "line-height": "30px"
+	    }
+	  }, [_vm._v("\n                        目前还没有评论...\n                    ")]) : _vm._e(), _vm._v(" "), _vm._l((_vm.blog.commentList), function(comment) {
+	    return _c('li', {
+	      staticClass: "mui-table-view-cell mui-media"
+	    }, [_c('div', {
+	      staticClass: "mui-table"
+	    }, [_c('div', {
+	      staticClass: "mui-table-cell mui-col-xs-10"
+	    }, [_c('span', {
+	      staticClass: "mui-ellipsis"
+	    }, [_vm._v(_vm._s(comment.author[0].name[0]))]), _vm._v(" "), _c('p', {
+	      staticClass: "mui-h6",
+	      domProps: {
+	        "innerHTML": _vm._s(comment.content[0]._)
+	      }
+	    })])])])
+	  })], 2)])])]), _vm._v(" "), _vm._m(0)])
 	},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
 	  return _c('a', {
 	    staticClass: "btn-return",

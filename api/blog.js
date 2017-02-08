@@ -31,3 +31,16 @@ exports.getBlog=(req,res,next)=>{
     })
 }
 
+exports.getBlogComment=(req,res,next)=>{
+    let blogId=req.body.blogId;
+
+    request.get('http://wcf.open.cnblogs.com/blog/post/'+blogId+'/comments/1/1000000000',(error,response,body)=>{
+        if (error) {
+            res.send(error);
+        }
+        else {
+            responseFun.ParseXml(res,body);
+        }
+    })
+}
+

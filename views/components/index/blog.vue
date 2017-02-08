@@ -14,6 +14,19 @@
                 </div>
             </div>
             <div class="mui-card-footer">
+                <span>
+                    <!--阅读量-->
+                    <span class="mui-icon mui-icon-eye" style="color: #999;"></span>
+                    <span>{{blog.views[0]}}</span>
+
+                    <!--点赞量-->
+                    <span class="mui-icon-extra mui-icon-extra-heart-filled" style="font-size: 19px;color: #999;margin-left: 10px;"></span>
+                    <span>{{blog.diggs[0]}}</span>
+
+                    <!--评论数-->
+                    <span class="mui-icon mui-icon-chat" style="font-size: 18px;color: #999;margin-left: 10px;"></span>
+                    <span>{{blog.comments[0]}}</span>
+                </span>
                 <a class="mui-card-link" @tap="showBlog">查看全文</a>
             </div>
         </div>
@@ -33,7 +46,6 @@ import {mapMutations} from 'vuex'
             publishTime(){
                 let timeStr=this.blog.published[0]
                 timeStr=timeStr.split('+')[0]
-                console.log(new Date(timeStr))
                 return timeStr;
             }
         },

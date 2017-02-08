@@ -27,6 +27,19 @@ const actions = {
                 resolve()
             })
         })
+    },
+    getBlogComment({commit, state, rootState}){
+        let queryData = {
+            blogId:rootState.route.params.id,
+        }
+        return new Promise((resolve, reject) => {
+            Post('getBlogComment', queryData).then(response => {
+                commit(ASSIGN_BLOG, {
+                    commentList:response.body.feed.entry
+                })
+                resolve()
+            })
+        })
     }
 }
 

@@ -7,5 +7,6 @@ let router=express.Router();
 router.get('/',index.index)
 router.all('/api/getRecent',blog.getRecent);
 router.all('/api/getBlog',blog.getBlog);
+router.all('/api/getBlogComment',blog.getBlogComment);
 
 module.exports=router;
