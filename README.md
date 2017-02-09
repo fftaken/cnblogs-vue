@@ -11,7 +11,7 @@ node app.js
 在浏览器访问 http://localhost:8080
 
 ## 操作演示
-![sample_img](http://ol1u7lofv.bkt.clouddn.com/new.gif)
+![sample_img](http://ol1u7lofv.bkt.clouddn.com/1.gif)
 
 ## 技术栈
 http服务器、跨域方案[NodeJs](https://nodejs.org/en/)   
