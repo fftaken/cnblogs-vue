@@ -27,13 +27,13 @@ const mutations = {
 }
 
 const actions = {
-    getNews({commit, state}) {
+    getNewsList({commit, state}) {
         let queryData = {
             page: state.page,
             rows: state.rows
         }
         return new Promise((resolve, reject) => {
-            Post('getRecent', queryData).then(response => {
+            Post('getNewsList', queryData).then(response => {
                 commit(APPEND_NEWS_LIST, response.body.feed.entry)
                 resolve()
             })
@@ -45,7 +45,7 @@ const actions = {
             rows: state.rows
         }
         return new Promise((resolve, reject) => {
-            Post('getRecent', queryData).then(response => {
+            Post('getNewsList', queryData).then(response => {
                 commit(UPDATE_NEWS_LIST, response.body.feed.entry)
                 resolve()
             })

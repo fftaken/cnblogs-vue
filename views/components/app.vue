@@ -22,4 +22,7 @@ html,body
     margin 0px
     padding 0px
     overflow hidden
+.mui-bar-tab .mui-tab-item.mui-active 
+    color #f76546 !important
+
 </style>

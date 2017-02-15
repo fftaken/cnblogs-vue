@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 import {state,mutations} from './mutations'
 import * as actions from './actions'
 import blog from './modules/blog'
+import news from './modules/news'
 import blog_list from './modules/blog_list'
 import news_list from './modules/news_list'
 
@@ -14,6 +15,7 @@ export default new Vuex.Store({
     actions,
     modules:{
         blog,
+        news,
         blog_list,
         news_list
     }

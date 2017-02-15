@@ -15,22 +15,7 @@
 
                 </div>
                 <div v-show="!loading">
-                    <div class="title" style="font-size: 21px;margin-bottom: 10px;">
-                        评论
-                    </div>
-                    <ul class="mui-table-view">
-                        <div style="text-align: center;height: 30px;line-height: 30px;" v-if="!hasComment">
-                            目前还没有评论...
-                        </div>
-                        <li class="mui-table-view-cell mui-media" v-for="comment in blog.commentList">
-                            <div class="mui-table">
-                                <div class="mui-table-cell mui-col-xs-10">
-                                    <span class="mui-ellipsis">{{comment.author[0].name[0]}}</span>
-                                    <p class="mui-h6" v-html="comment.content[0]._"></p>
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
+                    <comment :commentList="blog.commentList"></comment>
                 </div>
             </div>
         </div>
@@ -42,8 +27,12 @@
     </div>
 </template>
 <script>
+import comment from '../comment/index.vue'
 import {mapState,mapActions} from 'vuex'
     export default {
+        components:{
+            comment
+        },
         data(){
             return {
                 loading:true
@@ -56,12 +45,11 @@ import {mapState,mapActions} from 'vuex'
             publishTime(){
                 let timeStr=this.blog.published[0]
                 timeStr=timeStr.split('+')[0]
-                console.log(new Date(timeStr))
                 return timeStr;
             },
-            hasComment(){
-                return this.blog.commentList&&this.blog.commentList.length!=0
-            }
+            // hasComment(){
+            //     return this.blog.commentList&&this.blog.commentList.length!=0
+            // }
         },
         methods:{
             ...mapActions(['getBlog','getBlogComment']),
@@ -109,15 +97,17 @@ import {mapState,mapActions} from 'vuex'
 .btn-return
     display block
     z-index 2
-    color #999
+    color #f76546
     position fixed
     bottom 70px
-    right 10px
+    right 20px
     width 50px
     height 50px
     border-radius 25px
     text-align center
     line-height 50px
-    border 1px solid #e5e5e5
+    border 1px solid #f76546
     background-color rgba(255,255,255,0.8)
+    .mui-icon
+        font-weight 800 !important
 </style>

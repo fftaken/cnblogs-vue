@@ -1,40 +1,40 @@
 import { Post } from '../../api'
-import { UPDATE_BLOG,ASSIGN_BLOG } from '../mutation_types'
+import { UPDATE_NEWS,ASSIGN_NEWS } from '../mutation_types'
 
 const state = {
     item:{}
 }
 
 const mutations = {
-    [UPDATE_BLOG](state, data) {
+    [UPDATE_NEWS](state, data) {
         state.item=data
     },
-    [ASSIGN_BLOG](state,data){
+    [ASSIGN_NEWS](state,data){
         state.item=Object.assign({},state.item,data)
     }
 }
 
 const actions = {
-    getBlog({commit, state,rootState}) {
+    getNewsContent({commit, state,rootState}) {
         let queryData = { 
             id:rootState.route.params.id,
         }
         return new Promise((resolve, reject) => {
-            Post('getBlog', queryData).then(response => {
-                commit(ASSIGN_BLOG, {
-                    blogContent:response.body.string
+            Post('getNewsContent', queryData).then(response => {
+                commit(ASSIGN_NEWS, {
+                    newsContent:response.body.NewsBody.Content[0]
                 })
                 resolve()
             })
         })
     },
-    getBlogComment({commit, state, rootState}){
+    getNewsComment({commit, state, rootState}){
         let queryData = {
-            blogId:rootState.route.params.id,
+            newsId:rootState.route.params.id,
         }
         return new Promise((resolve, reject) => {
-            Post('getBlogComment', queryData).then(response => {
-                commit(ASSIGN_BLOG, {
+            Post('getNewsComment', queryData).then(response => {
+                commit(ASSIGN_NEWS, {
                     commentList:response.body.feed.entry
                 })
                 resolve()
