@@ -8,8 +8,11 @@ npm install
 webpack
 node app.js
 ```
-在浏览器访问 http://localhost:8080
+在浏览器访问 http://localhost:8080   
 按F12 模拟手机访问或者在手机端访问体验最好
+
+## 运行截图
+![sample_img](http://ol1u7lofv.bkt.clouddn.com/4.jpg)
 
 ### 目录结构
 ```
