@@ -19,7 +19,7 @@
                 </div>
             </div>
         </div>
-        <a href="javascript:history.go(-1)" class="btn-return">
+        <a href="javascript:;" @click="ret" class="btn-return">
             <div class="mui-icon mui-icon-undo">
 
             </div>
@@ -50,7 +50,7 @@ import {mapState,mapActions} from 'vuex'
         },
         methods:{
             ...mapActions(['getNewsContent','getNewsComment']),
-            return(){
+            ret(){
                 this.$router.go(-1)
             }
         },
@@ -65,6 +65,9 @@ import {mapState,mapActions} from 'vuex'
                 that.$nextTick(function(){
                     $('.code_img_closed').remove()
                     that.loading=false
+                    $('img').attr('data-preview-src','');
+                    $('img').attr('data-preview-group','1');
+                    mui.previewImage();
                 })
                 that.getNewsComment()
             })

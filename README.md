@@ -1,6 +1,7 @@
 # cnblogs-vue
 
-博客园vue版第三方客户端    
+博客园vue版第三方客户端  
+注：因为没有申请到博客园官方的api权限，所以系统没有用户体系，无法评论、点赞等等
 感谢[@jackhutu](https://github.com/jackhutu)大神，他的作品[jackblog-vue](https://github.com/jackhutu/jackblog-vue)让我学到很多东西
 ## 使用方法
 ```

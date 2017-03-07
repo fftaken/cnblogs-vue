@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="title" style="font-size: 21px;margin-bottom: 10px;">
-            评论
+            评论({{commentCount}})
         </div>
         <ul class="mui-table-view">
             <div style="text-align: center;height: 30px;line-height: 30px;" v-if="!hasComment">
@@ -25,6 +25,9 @@
         computed:{
             hasComment(){
                 return this.commentList&&this.commentList.length>0
+            },
+            commentCount(){
+                return this.commentList?this.commentList.length:0
             }
         }
     }

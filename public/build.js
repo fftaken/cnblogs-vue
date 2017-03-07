@@ -16954,6 +16954,9 @@
 	    computed: {
 	        hasComment: function hasComment() {
 	            return this.commentList && this.commentList.length > 0;
+	        },
+	        commentCount: function commentCount() {
+	            return this.commentList ? this.commentList.length : 0;
 	        }
 	    }
 	};
@@ -16969,7 +16972,7 @@
 	      "font-size": "21px",
 	      "margin-bottom": "10px"
 	    }
-	  }, [_vm._v("\n        评论\n    ")]), _vm._v(" "), _c('ul', {
+	  }, [_vm._v("\n        评论(" + _vm._s(_vm.commentCount) + ")\n    ")]), _vm._v(" "), _c('ul', {
 	    staticClass: "mui-table-view"
 	  }, [(!_vm.hasComment) ? _c('div', {
 	    staticStyle: {
@@ -17236,7 +17239,7 @@
 	        }
 	    }),
 	    methods: (0, _extends3.default)({}, (0, _vuex.mapActions)(['getNewsContent', 'getNewsComment']), {
-	        return: function _return() {
+	        ret: function ret() {
 	            this.$router.go(-1);
 	        }
 	    }),
@@ -17251,6 +17254,9 @@
 	            that.$nextTick(function () {
 	                $('.code_img_closed').remove();
 	                that.loading = false;
+	                $('img').attr('data-preview-src', '');
+	                $('img').attr('data-preview-group', '1');
+	                mui.previewImage();
 	            });
 	            that.getNewsComment();
 	        });
@@ -17314,17 +17320,18 @@
 	    attrs: {
 	      "commentList": _vm.newsContent.commentList
 	    }
-	  })], 1)])]), _vm._v(" "), _vm._m(0)])
-	},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-	  return _c('a', {
+	  })], 1)])]), _vm._v(" "), _c('a', {
 	    staticClass: "btn-return",
 	    attrs: {
-	      "href": "javascript:history.go(-1)"
+	      "href": "javascript:;"
+	    },
+	    on: {
+	      "click": _vm.ret
 	    }
 	  }, [_c('div', {
 	    staticClass: "mui-icon mui-icon-undo"
-	  })])
-	}]}
+	  })])])
+	},staticRenderFns: []}
 	module.exports.render._withStripped = true
 	if (false) {
 	  module.hot.accept()
